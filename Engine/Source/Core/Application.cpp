@@ -1,34 +1,37 @@
 #include "Core/Globals.h"
 #include "Core/Application.h"
+
 #include "Modules/ModuleInput.h"
+#include "Modules/ModuleD3D12.h"
 
 Application::Application(int argc, wchar_t** argv, void* hWnd)
 {
-	modules.push_back(new ModuleInput((HWND)hWnd));
+    m_modules.push_back(new ModuleInput((HWND)hWnd));
+    m_modules.push_back(new ModuleD3D12((HWND)hWnd));
 }
 
 Application::~Application()
 {
-	cleanUp();
+    cleanUp();
 
-	for (auto it = modules.rbegin(); it != modules.rend(); ++it)
-	{
-		delete* it;
-	}
+    for (auto it = m_modules.rbegin(); it != m_modules.rend(); ++it)
+    {
+        delete* it;
+    }
 }
 
 bool Application::init()
-{	
-	bool ret = true;
+{
+    bool ret = true;
 
-	for (auto it = modules.begin(); it != modules.end() && ret; ++it)
+    for (auto it = m_modules.begin(); it != m_modules.end() && ret; ++it)
 	{
 		ret = (*it)->init();
 	}
 
-	lastMilis = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    m_lastMilis = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-	return ret;
+    return ret;
 }
 
 void Application::update()
@@ -36,31 +39,31 @@ void Application::update()
     using namespace std::chrono_literals;
 
     uint64_t currentMilis = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    elapsedMilis = currentMilis - lastMilis;
-    lastMilis = currentMilis;
-    tickSum -= tickList[tickIndex];
-    tickSum += elapsedMilis;
-    tickList[tickIndex] = elapsedMilis;
-    tickIndex = (tickIndex + 1) % MAX_FPS_TICKS;
+    m_elapsedMilis = currentMilis - m_lastMilis;
+    m_lastMilis = currentMilis;
+    m_tickSum -= m_tickList[m_tickIndex];
+    m_tickSum += m_elapsedMilis;
+    m_tickList[m_tickIndex] = m_elapsedMilis;
+    m_tickIndex = (m_tickIndex + 1) % MAX_FPS_TICKS;
 
-    if (!app->paused)
+    if (!app->m_paused)
     {
-        for (auto it = modules.begin(); it != modules.end(); ++it)
+        for (auto it = m_modules.begin(); it != m_modules.end(); ++it)
         {
             (*it)->update();
         }
-        
-        for (auto it = modules.begin(); it != modules.end(); ++it)
+
+        for (auto it = m_modules.begin(); it != m_modules.end(); ++it)
         {
             (*it)->preRender();
         }
 
-        for (auto it = modules.begin(); it != modules.end(); ++it)
+        for (auto it = m_modules.begin(); it != m_modules.end(); ++it)
         {
             (*it)->render();
         }
 
-        for (auto it = modules.begin(); it != modules.end(); ++it)
+        for (auto it = m_modules.begin(); it != m_modules.end(); ++it)
         {
             (*it)->postRender();
         }
@@ -71,7 +74,7 @@ bool Application::cleanUp()
 {
     bool ret = true;
 
-    for (auto it = modules.rbegin(); it != modules.rend() && ret; ++it)
+    for (auto it = m_modules.rbegin(); it != m_modules.rend() && ret; ++it)
     {
         ret = (*it)->cleanUp();
     }

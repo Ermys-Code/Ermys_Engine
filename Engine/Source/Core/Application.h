@@ -18,25 +18,25 @@ public:
 	void update();
 	bool cleanUp();
 
-	float    getFPS() const { return 1000.0f * float(MAX_FPS_TICKS) / tickSum; }
-	float    getAvgElapsedMs() const { return tickSum / float(MAX_FPS_TICKS); }
-	uint64_t getElapsedMilis() const { return elapsedMilis; }
+	float    getFPS() const { return 1000.0f * float(MAX_FPS_TICKS) / m_tickSum; }
+	float    getAvgElapsedMs() const { return m_tickSum / float(MAX_FPS_TICKS); }
+	uint64_t getElapsedMilis() const { return m_elapsedMilis; }
 
-	bool isPaused() const { return paused; }
-	bool setPaused(bool p) { paused = p; return paused; }
+	bool isPaused() const { return m_paused; }
+	bool setPaused(bool p) { m_paused = p; return m_paused; }
 
 private:
 	enum { MAX_FPS_TICKS = 30 };
 	typedef std::array<uint64_t, MAX_FPS_TICKS> TickList;
 
-	std::vector<Module*> modules;
+	std::vector<Module*> m_modules;
 
-	uint64_t  lastMilis = 0;
-	TickList  tickList;
-	uint64_t  tickIndex;
-	uint64_t  tickSum = 0;
-	uint64_t  elapsedMilis = 0;
-	bool      paused = false;
+	uint64_t  m_lastMilis = 0;
+	TickList  m_tickList;
+	uint64_t  m_tickIndex;
+	uint64_t  m_tickSum = 0;
+	uint64_t  m_elapsedMilis = 0;
+	bool      m_paused = false;
 };
 
 extern Application* app;

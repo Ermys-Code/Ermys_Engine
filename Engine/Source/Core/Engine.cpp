@@ -4,6 +4,7 @@
 #include "Core/Engine.h"
 
 #include "Core/Application.h"
+#include "Modules/ModuleD3D12.h"
 
 #include <shellapi.h>
 
@@ -65,6 +66,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	delete app;
 
+    ComPtr<IDXGIDebug> dxgiControler;
+    if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiControler))))
+    {
+        dxgiControler->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+    }
+
 	return (int)msg.wParam;
 }
 
@@ -81,7 +88,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.hInstance = hInstance;
 	wcex.hIcon = LoadIcon(hInstance, NULL);
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);;
 	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName = szWindowClass;
     wcex.hIconSm = NULL;
