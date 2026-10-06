@@ -1,4 +1,4 @@
-#include "Globals.h"
+#include "Core/Globals.h"
 
 #include "Core/Framework.h"
 #include "Core/Engine.h"
@@ -84,6 +84,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName = szWindowClass;
+    wcex.hIconSm = NULL;
 	//wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassExW(&wcex);
@@ -94,6 +95,24 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	hInst = hInstance;
 
 	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr, hInstance, nullptr);
+
+    if (hWnd == nullptr)
+    {
+        DWORD error = GetLastError();
+
+        wchar_t buffer[256];
+        FormatMessageW(
+            FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+            nullptr,
+            error,
+            0,
+            buffer,
+            256,
+            nullptr
+        );
+
+        MessageBoxW(nullptr, buffer, L"CreateWindowW error", MB_OK | MB_ICONERROR);
+    }
 
 	if (!hWnd)
 	{

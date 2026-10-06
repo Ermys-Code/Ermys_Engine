@@ -1,10 +1,10 @@
-#include "Globals.h"
-#include "Application.h"
-//#include "ModuleInput.h"
+#include "Core/Globals.h"
+#include "Core/Application.h"
+#include "Modules/ModuleInput.h"
 
 Application::Application(int argc, wchar_t** argv, void* hWnd)
 {
-	//modules.push_back(new ModuleInput((HWND)hWnd));
+	modules.push_back(new ModuleInput((HWND)hWnd));
 }
 
 Application::~Application()
@@ -23,7 +23,7 @@ bool Application::init()
 
 	for (auto it = modules.begin(); it != modules.end() && ret; ++it)
 	{
-		//ret = (*it)->init();
+		ret = (*it)->init();
 	}
 
 	lastMilis = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -35,9 +35,7 @@ void Application::update()
 {
     using namespace std::chrono_literals;
 
-    // Update milis
     uint64_t currentMilis = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-
     elapsedMilis = currentMilis - lastMilis;
     lastMilis = currentMilis;
     tickSum -= tickList[tickIndex];
@@ -49,22 +47,22 @@ void Application::update()
     {
         for (auto it = modules.begin(); it != modules.end(); ++it)
         {
-            //(*it)->update();
+            (*it)->update();
         }
         
         for (auto it = modules.begin(); it != modules.end(); ++it)
         {
-            //(*it)->preRender();
+            (*it)->preRender();
         }
 
         for (auto it = modules.begin(); it != modules.end(); ++it)
         {
-            //(*it)->render();
+            (*it)->render();
         }
 
         for (auto it = modules.begin(); it != modules.end(); ++it)
         {
-            //(*it)->postRender();
+            (*it)->postRender();
         }
     }
 }
@@ -75,7 +73,7 @@ bool Application::cleanUp()
 
     for (auto it = modules.rbegin(); it != modules.rend() && ret; ++it)
     {
-        //ret = (*it)->cleanUp();
+        ret = (*it)->cleanUp();
     }
 
     return ret;

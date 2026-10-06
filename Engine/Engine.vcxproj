@@ -15,9 +15,12 @@
     <ClInclude Include="3rdParty\imgui-docking\backends\imgui_impl_win32.h" />
     <ClInclude Include="3rdParty\imgui-docking\imgui.h" />
     <ClInclude Include="3rdParty\imgui-docking\imgui_internal.h" />
+    <ClInclude Include="3rdParty\Input\GamePad.h" />
     <ClInclude Include="3rdParty\Input\Keyboard.h" />
     <ClInclude Include="3rdParty\Input\Mouse.h" />
     <ClInclude Include="3rdParty\Input\PlatformHelpers.h" />
+    <ClInclude Include="Source\Modules\ModuleInput.h" />
+    <ClInclude Include="Source\Modules\Module.h" />
     <ClInclude Include="Source\Core\Application.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Source\Core\Engine.h" />
@@ -53,6 +56,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="3rdParty\Input\GamePad.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="3rdParty\Input\Keyboard.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -65,6 +72,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Core/Globals.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Core/Globals.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Source\Modules\ModuleInput.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\Globals.cpp">
@@ -133,7 +141,7 @@
       <AdditionalIncludeDirectories>.;3rdParty;3rdParty/DebugDraw;3rdParty/SimpleMath;Source;Resources;3rdParty/WinPixEventRunTime/Include;3rdParty/ImGuizmo;3rdParty/DirectXTex;3rdParty/tinygltf;3rdParty/mikktspace;3rdParty/imgui-docking;3rdParty/directX</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Globals.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core/Globals.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,7 +161,7 @@
       <AdditionalIncludeDirectories>.;3rdParty;3rdParty/DebugDraw;3rdParty/SimpleMath;Source;Resources;3rdParty/WinPixEventRunTime/Include;3rdParty/ImGuizmo;3rdParty/DirectXTex;3rdParty/tinygltf;3rdParty/mikktspace;3rdParty/imgui-docking;3rdParty/directX</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Globals.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core/Globals.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
