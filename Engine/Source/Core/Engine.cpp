@@ -151,7 +151,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
-        // Parse the menu selections:
         switch (wmId)
         {
         /*case IDM_ABOUT:
@@ -167,7 +166,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
     case WM_PAINT:
     {
-        //app->update();
+        app->update();
     }
     break;
     case WM_DESTROY:
@@ -175,16 +174,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_SIZE:
         if (wParam == SIZE_MINIMIZED) {
-            //app->setPaused(true);
+            app->setPaused(true);
         }
         else {
-            //app->setPaused(false);
+            app->setPaused(false);
         }
         break;
     case WM_SYSKEYDOWN:
         if (wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)
         {
-            // This is where you'd implement the classic ALT+ENTER hotkey for fullscreen toggle
+            //ALT+ENTER hotkey for fullscreen toggle
         }
         Keyboard::ProcessMessage(message, wParam, lParam);
         break;
