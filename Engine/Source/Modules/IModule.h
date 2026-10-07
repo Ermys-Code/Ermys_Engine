@@ -2,13 +2,13 @@
 
 #include "Core/Globals.h"
 
-class Module
+class IModule
 {
 public:
 
-	Module() {}
+	IModule() {}
 
-	virtual ~Module() {}
+	virtual ~IModule() {}
 
 	virtual bool init()
 	{

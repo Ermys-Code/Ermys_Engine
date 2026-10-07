@@ -19,9 +19,10 @@
     <ClInclude Include="3rdParty\Input\Keyboard.h" />
     <ClInclude Include="3rdParty\Input\Mouse.h" />
     <ClInclude Include="3rdParty\Input\PlatformHelpers.h" />
+    <ClInclude Include="Source\Modules\ModuleRender.h" />
     <ClInclude Include="Source\Modules\ModuleD3D12.h" />
     <ClInclude Include="Source\Modules\ModuleInput.h" />
-    <ClInclude Include="Source\Modules\Module.h" />
+    <ClInclude Include="Source\Modules\IModule.h" />
     <ClInclude Include="Source\Core\Application.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Source\Core\Engine.h" />
@@ -73,6 +74,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Core/Globals.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Core/Globals.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Source\Modules\ModuleRender.cpp" />
     <ClCompile Include="Source\Modules\ModuleD3D12.cpp" />
     <ClCompile Include="Source\Modules\ModuleInput.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />

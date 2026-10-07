@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Modules/Module.h"
+#include "Modules/IModule.h"
 
 namespace DirectX { class Keyboard; class Mouse; class GamePad; }
 
-class ModuleInput : public Module
+class ModuleInput : public IModule
 {
 public:
 

@@ -54,7 +54,7 @@
     <ClInclude Include="Source\Core\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Modules\Module.h">
+    <ClInclude Include="Source\Modules\IModule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Modules\ModuleInput.h">
@@ -64,6 +64,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Modules\ModuleD3D12.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Modules\ModuleRender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -111,6 +114,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Modules\ModuleD3D12.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Modules\ModuleRender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,7 +6,7 @@
 #include <vector>
 #include <chrono>
 
-class Module;
+class IModule;
 
 class Application
 {
@@ -29,7 +29,7 @@ private:
 	enum { MAX_FPS_TICKS = 30 };
 	typedef std::array<uint64_t, MAX_FPS_TICKS> TickList;
 
-	std::vector<Module*> m_modules;
+	std::vector<IModule*> m_modules;
 
 	uint64_t  m_lastMilis = 0;
 	TickList  m_tickList;
