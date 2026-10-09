@@ -28,6 +28,7 @@
     <ClInclude Include="Source\Core\Engine.h" />
     <ClInclude Include="Source\Core\Framework.h" />
     <ClInclude Include="Source\Core\Globals.h" />
+    <ClInclude Include="Source\D3D12\SwapChain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rdParty\imgui-docking\backends\imgui_impl_dx12.cpp">
@@ -83,6 +84,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\D3D12\SwapChain.cpp" />
     <ClInclude Include="Source\Core\Targetver.h">
       <FileType>CppCode</FileType>
     </ClInclude>
