@@ -16,7 +16,7 @@ public:
 	};
 
 public:
-	SwapChain(HWND hWmd, ComPtr<ID3D12Device4> device, ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<IDXGIFactory6> factory);
+	SwapChain(HWND hWmd, ID3D12Device4* device, ID3D12CommandQueue* commandQueue, IDXGIFactory6* factory);
 	~SwapChain();
 
 	void CleanUp();

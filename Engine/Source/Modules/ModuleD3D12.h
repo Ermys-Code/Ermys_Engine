@@ -16,14 +16,16 @@ public:
 	~ModuleD3D12();
 
 	bool init()		  override;
-	void preRender()  override;
-	void render()	  override;
-	void postRender() override;
 	bool cleanUp()	  override;
 
-	ID3D12Device4* GetDevice() { return m_device.Get(); }
-	FrameSync* GetFrameSync()  { return m_frameSync; }
+	ID3D12Device4* GetDevice()									 { return m_device.Get(); }
 	ID3D12CommandAllocator* GetCommandAllocator(UINT frameIndex) { return m_commandAllocators[frameIndex].Get(); }
+	ID3D12GraphicsCommandList* GetCommandList()					 { return m_commandList.Get(); }
+	ID3D12CommandQueue* GetCommandQueue()						 { return m_commandQueue.Get(); }
+
+	FrameSync* GetFrameSync()  { return m_frameSync.get(); }
+	SwapChain* GetSwapChain()  { return m_swapChain.get(); }
+
 
 private:
 	void InitDX();
@@ -37,8 +39,7 @@ private:
 
 	HWND m_hWnd;
 
-	SwapChain*				m_swapChain;
-	SwapChain::FrameContext m_currentFrameContext;
-	FrameSync*				m_frameSync;
+	std::unique_ptr<SwapChain> m_swapChain;
+	std::unique_ptr<FrameSync> m_frameSync;
 };
 

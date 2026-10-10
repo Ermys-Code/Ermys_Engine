@@ -4,7 +4,7 @@
 class FrameSync
 {
 public:
-	FrameSync(ComPtr<ID3D12Device4> device);
+	FrameSync(ID3D12Device4* device);
 	~FrameSync();
 
 	void CleanUp();

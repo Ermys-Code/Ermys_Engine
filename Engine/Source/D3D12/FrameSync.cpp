@@ -1,7 +1,7 @@
 #include "Core/Globals.h"
 #include "D3D12/FrameSync.h"
 
-FrameSync::FrameSync(ComPtr<ID3D12Device4> device)
+FrameSync::FrameSync(ID3D12Device4* device)
 {
 	//Create CurrentFrameFence Fence
 	device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_currentFrameFence));

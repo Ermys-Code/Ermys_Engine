@@ -5,7 +5,7 @@
 #include "Modules/ModuleD3D12.h"
 #include "D3D12/FrameSync.h"
 
-SwapChain::SwapChain(HWND hWnd, ComPtr<ID3D12Device4> device, ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<IDXGIFactory6> factory)
+SwapChain::SwapChain(HWND hWnd, ID3D12Device4* device, ID3D12CommandQueue* commandQueue, IDXGIFactory6* factory)
 {
 	//Get Window Size
 	RECT rect = {};
@@ -27,7 +27,7 @@ SwapChain::SwapChain(HWND hWnd, ComPtr<ID3D12Device4> device, ComPtr<ID3D12Comma
 	swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 	swapChainDesc.Flags = 0;
 	ComPtr<IDXGISwapChain1> swapChain1;
-	factory->CreateSwapChainForHwnd(commandQueue.Get(), hWnd, &swapChainDesc, nullptr, nullptr, &swapChain1);
+	factory->CreateSwapChainForHwnd(commandQueue, hWnd, &swapChainDesc, nullptr, nullptr, &swapChain1);
 	swapChain1.As(&m_swapChain);
 
 	//Create Descriptor Heap
