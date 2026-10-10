@@ -2,6 +2,7 @@
 #include "Modules/ModuleD3D12.h"
 
 #include "D3D12/SwapChain.h"
+#include "D3D12/FrameSync.h"
 
 ModuleD3D12::ModuleD3D12(HWND hWnd)
 {
@@ -16,6 +17,9 @@ ModuleD3D12::~ModuleD3D12()
 bool ModuleD3D12::init()
 {
 	m_swapChain = new SwapChain(m_hWnd, m_device, m_commandQueue, m_factory);
+	m_frameSync = new FrameSync(m_device);
+
+
 
 	return true;
 }
@@ -24,12 +28,12 @@ void ModuleD3D12::preRender()
 {
 	m_currentFrameContext = m_swapChain->StartNewFrame();
 
-	m_commandAllocators[m_currentFrameContext.frameIndex]->Reset();
+	m_currentFrameContext.commandAllocator->Reset();
 }
 
 void ModuleD3D12::render()
 {
-	m_commandList->Reset(m_commandAllocators[m_currentFrameContext.frameIndex].Get(), nullptr);
+	m_commandList->Reset(m_currentFrameContext.commandAllocator.Get(), nullptr);
 
 	m_swapChain->CreateBarrierForCurrentFrame(m_commandList, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
@@ -71,18 +75,16 @@ void ModuleD3D12::postRender()
 bool ModuleD3D12::cleanUp()
 {
 	m_swapChain->CleanUp();
+	m_frameSync->CleanUp();
 
 	m_commandList.Reset();
-
 	m_commandQueue.Reset();
-
 	m_adapter.Reset();
-
 	m_factory.Reset();
-
 	m_device.Reset();
 
 	delete m_swapChain;
+	delete m_frameSync;
 
 	return true;
 }

@@ -3,12 +3,10 @@
 
 #include "Core/Application.h"
 #include "Modules/ModuleD3D12.h"
+#include "D3D12/FrameSync.h"
 
 SwapChain::SwapChain(HWND hWnd, ComPtr<ID3D12Device4> device, ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<IDXGIFactory6> factory)
 {
-	//Create CurrentFrameFence Fence
-	device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_currentFrameFence));
-
 	//Get Window Size
 	RECT rect = {};
 	GetClientRect(hWnd, &rect);
@@ -50,14 +48,11 @@ SwapChain::SwapChain(HWND hWnd, ComPtr<ID3D12Device4> device, ComPtr<ID3D12Comma
 
 		rtvHandle.ptr += rtvDescriptorSize;
 	}
-
-	//Create Fence Event
-	m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 }
 
 SwapChain::~SwapChain()
 {
-	m_currentFrameFence.Reset();
+	
 	m_swapChain.Reset();
 	m_rtvDescriptorHeap.Reset();
 	m_renderTargets->Reset();
@@ -65,17 +60,17 @@ SwapChain::~SwapChain()
 
 void SwapChain::CleanUp()
 {
-	CloseHandle(m_fenceEvent);
 }
 
 SwapChain::FrameContext SwapChain::GetFrameContext()
 {
 	m_currentFrameIndex = m_swapChain->GetCurrentBackBufferIndex();
 
-	FrameContext frameContext = {};
-	frameContext.rtv		  = m_renderTargets[m_currentFrameIndex].Get();
-	frameContext.rtvCpuHandle = GetRtvCpuHandle(m_currentFrameIndex);
-	frameContext.frameIndex   = m_currentFrameIndex;
+	FrameContext frameContext     = {};
+	frameContext.backBuffer		  = m_renderTargets[m_currentFrameIndex].Get();
+	frameContext.rtvCpuHandle     = GetRtvCpuHandle(m_currentFrameIndex);
+	frameContext.frameIndex       = m_currentFrameIndex;
+	frameContext.commandAllocator = app->GetModuleD3D12()->GetCommandAllocator(m_currentFrameIndex);
 
 	return frameContext;
 }
@@ -84,8 +79,7 @@ SwapChain::FrameContext SwapChain::StartNewFrame()
 {
 	if (m_frameNumber != 0)
 	{
-		HRESULT hr = m_currentFrameFence->SetEventOnCompletion(m_fenceValues[m_currentFrameIndex], m_fenceEvent);
-		DWORD waitResult = WaitForSingleObject(m_fenceEvent, INFINITE);
+		app->GetModuleD3D12()->GetFrameSync()->WaitForFence(m_currentFrameIndex);
 	}
 
 	return GetFrameContext();
@@ -98,10 +92,7 @@ void SwapChain::PresentCurrentFrame()
 
 void SwapChain::FinishCurrentFrame(ComPtr<ID3D12CommandQueue> commandQueue)
 {
-	uint64_t fenceValue = m_fenceValues[m_currentFrameIndex];
-
-	commandQueue->Signal(m_currentFrameFence.Get(), ++fenceValue);
-	m_fenceValues[m_currentFrameIndex] = fenceValue;
+	app->GetModuleD3D12()->GetFrameSync()->SignalFence(m_currentFrameIndex, commandQueue);
 
 	m_frameNumber++;
 }

@@ -7,6 +7,8 @@
 
 #include <dxgi1_6.h>
 
+class FrameSync;
+
 class ModuleD3D12 : public IModule
 {
 public:
@@ -20,6 +22,8 @@ public:
 	bool cleanUp()	  override;
 
 	ID3D12Device4* GetDevice() { return m_device.Get(); }
+	FrameSync* GetFrameSync()  { return m_frameSync; }
+	ID3D12CommandAllocator* GetCommandAllocator(UINT frameIndex) { return m_commandAllocators[frameIndex].Get(); }
 
 private:
 	void InitDX();
@@ -35,5 +39,6 @@ private:
 
 	SwapChain*				m_swapChain;
 	SwapChain::FrameContext m_currentFrameContext;
+	FrameSync*				m_frameSync;
 };
 

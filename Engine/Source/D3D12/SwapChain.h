@@ -7,10 +7,12 @@ class SwapChain
 public:
 	struct FrameContext
 	{
-		ID3D12Resource* rtv = nullptr;
+		ID3D12Resource* backBuffer = nullptr;
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuHandle;
 
 		uint64_t frameIndex = 0;
+		
+		ComPtr<ID3D12CommandAllocator> commandAllocator;
 	};
 
 public:
@@ -30,16 +32,13 @@ public:
 private:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRtvCpuHandle(UINT frameIndex);
 
-	ComPtr<ID3D12Fence1>			   m_currentFrameFence;
 	ComPtr<IDXGISwapChain3>	           m_swapChain;
 	ComPtr<ID3D12DescriptorHeap>	   m_rtvDescriptorHeap;
 	ComPtr<ID3D12Resource>	           m_renderTargets[FRAMES_IN_FLIGHT];
 
 	uint64_t m_currentFrameIndex = 0;
 	uint64_t m_frameNumber = 0;
-	uint64_t m_fenceValues[FRAMES_IN_FLIGHT] = {};
-	uint64_t m_lastCompletedFenceValue = 0;
 	
-	HANDLE m_fenceEvent;
+	
 };
 
