@@ -3,7 +3,7 @@
 #include "Modules/IModule.h"
 #include "D3D12/SwapChain.h"
 
-//class IRenderPass;
+class IRenderPass;
 
 class ModuleRender : public IModule
 {
@@ -24,6 +24,6 @@ private:
 	ComPtr<ID3D12GraphicsCommandList> m_commandList;
 	ComPtr<ID3D12CommandQueue>		  m_commandQueue;
 
-	//std::vector<std::unique_ptr<IRenderPass>> m_renderPasses;
+	std::vector<std::unique_ptr<IRenderPass>> m_renderPasses;
 };
 

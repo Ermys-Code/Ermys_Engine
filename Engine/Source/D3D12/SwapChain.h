@@ -1,19 +1,13 @@
 #pragma once
 
+#include "Rendering/FrameContext.h"
+
 #include <dxgi1_6.h>
 
 class SwapChain
 {
 public:
-	struct FrameContext
-	{
-		ID3D12Resource* backBuffer = nullptr;
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuHandle;
-
-		uint64_t frameIndex = 0;
-		
-		ComPtr<ID3D12CommandAllocator> commandAllocator;
-	};
+	
 
 public:
 	SwapChain(HWND hWmd, ID3D12Device4* device, ID3D12CommandQueue* commandQueue, IDXGIFactory6* factory);
@@ -35,6 +29,8 @@ private:
 	ComPtr<IDXGISwapChain3>	           m_swapChain;
 	ComPtr<ID3D12DescriptorHeap>	   m_rtvDescriptorHeap;
 	ComPtr<ID3D12Resource>	           m_renderTargets[FRAMES_IN_FLIGHT];
+
+	HWND m_hWnd;
 
 	uint64_t m_currentFrameIndex = 0;
 	uint64_t m_frameNumber = 0;

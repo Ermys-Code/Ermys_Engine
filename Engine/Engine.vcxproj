@@ -19,6 +19,7 @@
     <ClInclude Include="3rdParty\Input\Keyboard.h" />
     <ClInclude Include="3rdParty\Input\Mouse.h" />
     <ClInclude Include="3rdParty\Input\PlatformHelpers.h" />
+    <ClInclude Include="Source\Passes\IRenderPass.h" />
     <ClInclude Include="Source\D3D12\FrameSync.h" />
     <ClInclude Include="Source\Modules\ModuleRender.h" />
     <ClInclude Include="Source\Modules\ModuleD3D12.h" />
@@ -30,6 +31,9 @@
     <ClInclude Include="Source\Core\Framework.h" />
     <ClInclude Include="Source\Core\Globals.h" />
     <ClInclude Include="Source\D3D12\SwapChain.h" />
+    <ClInclude Include="Source\Rendering\RenderContext.h" />
+    <ClInclude Include="Source\Rendering\Vertex.h" />
+    <ClInclude Include="TrianglePass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rdParty\imgui-docking\backends\imgui_impl_dx12.cpp">
@@ -87,6 +91,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\D3D12\SwapChain.cpp" />
+    <ClCompile Include="TrianglePass.cpp" />
     <ClInclude Include="Source\Core\Targetver.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -146,7 +151,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;3rdParty;3rdParty/DebugDraw;3rdParty/SimpleMath;Source;Resources;3rdParty/WinPixEventRunTime/Include;3rdParty/ImGuizmo;3rdParty/DirectXTex;3rdParty/tinygltf;3rdParty/mikktspace;3rdParty/imgui-docking;3rdParty/directX</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Source/Passes;Source/Rendering;3rdParty;3rdParty/DebugDraw;3rdParty/SimpleMath;Source;Resources;3rdParty/WinPixEventRunTime/Include;3rdParty/ImGuizmo;3rdParty/DirectXTex;3rdParty/tinygltf;3rdParty/mikktspace;3rdParty/imgui-docking;3rdParty/directX</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Core/Globals.h</PrecompiledHeaderFile>
@@ -166,7 +171,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;3rdParty;3rdParty/DebugDraw;3rdParty/SimpleMath;Source;Resources;3rdParty/WinPixEventRunTime/Include;3rdParty/ImGuizmo;3rdParty/DirectXTex;3rdParty/tinygltf;3rdParty/mikktspace;3rdParty/imgui-docking;3rdParty/directX</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Source/Passes;Source/Rendering;3rdParty;3rdParty/DebugDraw;3rdParty/SimpleMath;Source;Resources;3rdParty/WinPixEventRunTime/Include;3rdParty/ImGuizmo;3rdParty/DirectXTex;3rdParty/tinygltf;3rdParty/mikktspace;3rdParty/imgui-docking;3rdParty/directX</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Core/Globals.h</PrecompiledHeaderFile>

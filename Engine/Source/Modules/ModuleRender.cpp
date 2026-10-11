@@ -7,7 +7,7 @@
 
 #include "D3D12/SwapChain.h"
 
-//#include "Passes/IRenderPass.h"
+#include "Passes/IRenderPass.h"
 
 ModuleRender::ModuleRender()
 {

@@ -75,6 +75,18 @@
     <ClInclude Include="Source\D3D12\FrameSync.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Passes\IRenderPass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\RenderContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TrianglePass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Engine.cpp">
@@ -129,6 +141,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\D3D12\FrameSync.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TrianglePass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

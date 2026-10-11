@@ -4,9 +4,12 @@
 #include "Core/Application.h"
 #include "Modules/ModuleD3D12.h"
 #include "D3D12/FrameSync.h"
+#include "Rendering/FrameContext.h"
 
 SwapChain::SwapChain(HWND hWnd, ID3D12Device4* device, ID3D12CommandQueue* commandQueue, IDXGIFactory6* factory)
 {
+	m_hWnd = hWnd;
+
 	//Get Window Size
 	RECT rect = {};
 	GetClientRect(hWnd, &rect);
@@ -62,20 +65,27 @@ void SwapChain::CleanUp()
 {
 }
 
-SwapChain::FrameContext SwapChain::GetFrameContext()
+FrameContext SwapChain::GetFrameContext()
 {
 	m_currentFrameIndex = m_swapChain->GetCurrentBackBufferIndex();
+
+	RECT rect = {};
+	GetClientRect(m_hWnd, &rect);
+	unsigned width = unsigned(rect.right - rect.left);
+	unsigned height = unsigned(rect.bottom - rect.top);
 
 	FrameContext frameContext     = {};
 	frameContext.backBuffer		  = m_renderTargets[m_currentFrameIndex].Get();
 	frameContext.rtvCpuHandle     = GetRtvCpuHandle(m_currentFrameIndex);
+	frameContext.width			  = width;
+	frameContext.height			  = height;
 	frameContext.frameIndex       = m_currentFrameIndex;
 	frameContext.commandAllocator = app->GetModuleD3D12()->GetCommandAllocator(m_currentFrameIndex);
 
 	return frameContext;
 }
 
-SwapChain::FrameContext SwapChain::StartNewFrame()
+FrameContext SwapChain::StartNewFrame()
 {
 	if (m_frameNumber != 0)
 	{
