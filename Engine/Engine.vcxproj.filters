@@ -72,19 +72,25 @@
     <ClInclude Include="Source\D3D12\SwapChain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\D3D12\FrameSync.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Passes\IRenderPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\RenderContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TrianglePass.h">
+    <ClInclude Include="Source\Passes\TrianglePass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\FrameContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\D3D12\CommandQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\CommandContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -140,10 +146,13 @@
     <ClCompile Include="Source\D3D12\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\D3D12\FrameSync.cpp">
+    <ClCompile Include="Source\Passes\TrianglePass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TrianglePass.cpp">
+    <ClCompile Include="Source\D3D12\CommandQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\CommandContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -159,5 +168,9 @@
     <Image Include="Resources\icon2.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Source\Shaders\TriangleVS.hlsl" />
+    <FxCompile Include="Source\Shaders\TrianglePS.hlsl" />
   </ItemGroup>
 </Project>

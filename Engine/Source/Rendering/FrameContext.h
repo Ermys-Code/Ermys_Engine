@@ -1,16 +1,21 @@
 #pragma once
 
 #include "Core/Globals.h"
+#include "Rendering/CommandContext.h"
 
 struct FrameContext
 {
-	ID3D12Resource* backBuffer = nullptr;
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuHandle;
+	FrameContext(ID3D12Device4* device)
+	{
+		commandContext = std::make_unique<CommandContext>(device);
+	}
 
-	float width;
-	float height;
+	~FrameContext()
+	{
+		commandContext.reset();
+	}
 
-	uint64_t frameIndex = 0;
-
-	ComPtr<ID3D12CommandAllocator> commandAllocator;
+	std::unique_ptr<CommandContext> commandContext = nullptr;
+	
+	uint64_t fenceValue = 0;
 };

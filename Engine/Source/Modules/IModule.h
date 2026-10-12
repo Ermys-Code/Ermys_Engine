@@ -8,7 +8,7 @@ public:
 
 	IModule() {}
 
-	virtual ~IModule() {}
+	virtual ~IModule() = default;
 
 	virtual bool init()
 	{

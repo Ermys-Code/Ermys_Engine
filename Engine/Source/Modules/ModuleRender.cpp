@@ -6,8 +6,10 @@
 #include "Modules/ModuleD3D12.h"
 
 #include "D3D12/SwapChain.h"
+#include "D3D12/CommandQueue.h"
 
 #include "Passes/IRenderPass.h"
+#include "Passes/TrianglePass.h"
 
 ModuleRender::ModuleRender()
 {
@@ -19,68 +21,58 @@ ModuleRender::~ModuleRender()
 
 bool ModuleRender::init()
 {
+	for (size_t i = 0; i < FRAMES_IN_FLIGHT; i++)
+	{
+		m_frameContexts[i] = std::make_unique<FrameContext>(app->GetModuleD3D12()->GetDevice());
+	}
+
 	m_swapChain    = app->GetModuleD3D12()->GetSwapChain();
-	m_commandList  = app->GetModuleD3D12()->GetCommandList();
 	m_commandQueue = app->GetModuleD3D12()->GetCommandQueue();
 
+	m_renderPasses.push_back(std::make_unique<TrianglePass>());
+	
 	return true;
 }
 
 void ModuleRender::preRender()
 {
-	m_currentFrameContext = m_swapChain->StartNewFrame();
+	m_currentRenderContext = m_swapChain->GetCurrentRenderContext();
 
-	m_currentFrameContext.commandAllocator->Reset();
+	m_currentFrameContext = m_frameContexts[m_currentRenderContext->frameIndex].get();
+
+	m_commandQueue->WaitForFenceValue(m_currentFrameContext->fenceValue);
+
+	m_currentFrameContext->commandContext->Begin();
 }
 
 void ModuleRender::render()
 {
+	ID3D12GraphicsCommandList4* commandList = m_currentFrameContext->commandContext->GetCommandList();
+	
+	m_swapChain->CreateBarrierForCurrentFrame(commandList, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	m_commandList->Reset(m_currentFrameContext.commandAllocator.Get(), nullptr);
-
-	m_swapChain->CreateBarrierForCurrentFrame(m_commandList, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-
-	float clearColor1[] = { 0.1f, 0.0f, 0.0f, 1.0f };
-	float clearColor2[] = { 0.0f, 0.1f, 0.0f, 1.0f };
-	float clearColor3[] = { 0.0f, 0.0f, 0.1f, 1.0f };
-	float clearColor4[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	switch (m_currentFrameContext.frameIndex)
+	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	commandList->ClearRenderTargetView(m_currentRenderContext->rtvCpuHandle, clearColor, 0, nullptr);
+	
+	for (auto& pass : m_renderPasses)
 	{
-	case 0:
-		m_commandList->ClearRenderTargetView(m_currentFrameContext.rtvCpuHandle, clearColor1, 0, nullptr);
-		break;
-	case 1:
-		m_commandList->ClearRenderTargetView(m_currentFrameContext.rtvCpuHandle, clearColor2, 0, nullptr);
-		break;
-	case 2:
-		m_commandList->ClearRenderTargetView(m_currentFrameContext.rtvCpuHandle, clearColor3, 0, nullptr);
-		break;
-	default:
-		m_commandList->ClearRenderTargetView(m_currentFrameContext.rtvCpuHandle, clearColor4, 0, nullptr);
-		break;
+		pass->prepare(m_currentRenderContext, m_currentFrameContext);
+		pass->render(commandList);
 	}
 
-	m_swapChain->CreateBarrierForCurrentFrame(m_commandList, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+	m_swapChain->CreateBarrierForCurrentFrame(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
-	m_commandList->Close();
-
-	ID3D12CommandList* commandLists[] = { m_commandList.Get() };
-	m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
-
-	m_swapChain->PresentCurrentFrame();
-
-
-
-	//for (auto& pass : m_renderPasses)
-	//{
-	//	pass->prepare();
-	//	pass->render();
-	//}
 }
 
 void ModuleRender::postRender()
 {
-	m_swapChain->FinishCurrentFrame(m_commandQueue);
+	m_currentFrameContext->commandContext->Close();
+
+	m_commandQueue->ExecuteCommandList(m_currentFrameContext->commandContext->GetCommandList());
+
+	m_swapChain->PresentCurrentFrame();
+
+	m_currentFrameContext->fenceValue = m_commandQueue->Signal();
 }
 
 bool ModuleRender::cleanUp()

@@ -1,6 +1,9 @@
 #include "Core/Globals.h"
 #include "TrianglePass.h"
 
+#include "Core/Application.h"
+#include "Modules/ModuleD3D12.h"
+
 #include "Rendering/FrameContext.h"
 #include "Rendering/RenderContext.h"
 #include "Rendering/Vertex.h"
@@ -8,38 +11,33 @@
 #include <d3dcompiler.h>
 #include <Input/PlatformHelpers.h>
 
-TrianglePass::TrianglePass(ID3D12Device4* device)
+TrianglePass::TrianglePass()
 {
+    auto* device = app->GetModuleD3D12()->GetDevice();
 	createRootSignature(device);
 	createPipelineState(device);
+    createVertexBuffer(device);
 }
 
-void TrianglePass::prepare(RenderContext& renderContext, FrameContext& frameContext)
+void TrianglePass::prepare(RenderContext* renderContext, FrameContext* frameContext)
 {
     m_renderContext = renderContext;
     m_frameContext  = frameContext;
 }
 
-void TrianglePass::apply(ID3D12GraphicsCommandList4* commandList)
+void TrianglePass::render(ID3D12GraphicsCommandList4* commandList)
 {
     commandList->SetPipelineState(m_pipelineState.Get());
     commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
-    D3D12_VIEWPORT viewport{ 0.0, 0.0, float(m_frameContext.width), float(m_frameContext.height) , 0.0, 1.0 };
-    D3D12_RECT scissor{ 0, 0, m_frameContext.width, m_frameContext.height };
-    commandList->RSSetViewports(1, &viewport);
-    commandList->RSSetScissorRects(1, &scissor);
+    commandList->RSSetViewports(1, &m_renderContext->viewport);
+    commandList->RSSetScissorRects(1, &m_renderContext->scissorRect);
 
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    commandList->OMSetRenderTargets(1, &m_frameContext.rtvCpuHandle, FALSE, nullptr);
-    
-    Vertex vertices[3] =
-    {
-        {Vector3(-1.0f, -1.0f, 0.0f)},
-        {Vector3(0.0f,  1.0f,  0.0f)},
-        {Vector3(1.0f,  -1.0f, 0.0f)}
-    };
+    commandList->OMSetRenderTargets(1, &m_renderContext->rtvCpuHandle, FALSE, nullptr);
+
+    commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 
     commandList->DrawInstanced(3, 1, 0, 0);
 }
@@ -82,4 +80,36 @@ void TrianglePass::createPipelineState(ID3D12Device4* device)
     desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
     device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&m_pipelineState));
+}
+
+void TrianglePass::createVertexBuffer(ID3D12Device4* device)
+{
+    Vertex vertices[3] =
+    {
+        { Vector3(-1.0f, -1.0f, 0.0f) },
+        { Vector3(0.0f,  1.0f, 0.0f) },
+        { Vector3(1.0f, -1.0f, 0.0f) }
+    };
+
+    const UINT bufferSize = sizeof(vertices);
+
+    CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
+
+    CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
+
+    ThrowIfFailed(device->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE, &bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&m_vertexBuffer)));
+
+    void* mappedData = nullptr;
+    const D3D12_RANGE readRange{ 0, 0 };
+
+    ThrowIfFailed(m_vertexBuffer->Map(0, &readRange, &mappedData));
+
+    memcpy(mappedData, vertices, bufferSize);
+
+    m_vertexBuffer->Unmap(0, nullptr);
+
+    m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+
+    m_vertexBufferView.SizeInBytes = bufferSize;
+    m_vertexBufferView.StrideInBytes = sizeof(Vertex);
 }

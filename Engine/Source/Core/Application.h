@@ -32,11 +32,11 @@ private:
 	enum { MAX_FPS_TICKS = 30 };
 	typedef std::array<uint64_t, MAX_FPS_TICKS> TickList;
 
-	std::vector<IModule*> m_modules;
+	std::vector<std::unique_ptr<IModule>> m_modules;
 
 	uint64_t  m_lastMilis = 0;
-	TickList  m_tickList;
-	uint64_t  m_tickIndex;
+	TickList  m_tickList{};
+	uint64_t  m_tickIndex = 0;
 	uint64_t  m_tickSum = 0;
 	uint64_t  m_elapsedMilis = 0;
 	bool      m_paused = false;

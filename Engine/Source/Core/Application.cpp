@@ -7,19 +7,18 @@
 
 Application::Application(int argc, wchar_t** argv, void* hWnd)
 {
-    m_modules.push_back(new ModuleInput((HWND)hWnd));
-    m_modules.push_back(m_moduleD3D12 = new ModuleD3D12((HWND)hWnd));
-    m_modules.push_back(new ModuleRender());
+    m_modules.push_back(std::make_unique<ModuleInput>((HWND)hWnd));
+    
+    auto moduleD3D12 = std::make_unique<ModuleD3D12>((HWND)hWnd);
+    m_moduleD3D12 = moduleD3D12.get();
+    m_modules.push_back(std::move(moduleD3D12));
+
+    m_modules.push_back(std::make_unique<ModuleRender>());
 }
 
 Application::~Application()
 {
     cleanUp();
-
-    for (auto it = m_modules.rbegin(); it != m_modules.rend(); ++it)
-    {
-        delete* it;
-    }
 }
 
 bool Application::init()

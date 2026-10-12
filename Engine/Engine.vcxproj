@@ -19,8 +19,8 @@
     <ClInclude Include="3rdParty\Input\Keyboard.h" />
     <ClInclude Include="3rdParty\Input\Mouse.h" />
     <ClInclude Include="3rdParty\Input\PlatformHelpers.h" />
+    <ClInclude Include="Source\D3D12\CommandQueue.h" />
     <ClInclude Include="Source\Passes\IRenderPass.h" />
-    <ClInclude Include="Source\D3D12\FrameSync.h" />
     <ClInclude Include="Source\Modules\ModuleRender.h" />
     <ClInclude Include="Source\Modules\ModuleD3D12.h" />
     <ClInclude Include="Source\Modules\ModuleInput.h" />
@@ -31,9 +31,11 @@
     <ClInclude Include="Source\Core\Framework.h" />
     <ClInclude Include="Source\Core\Globals.h" />
     <ClInclude Include="Source\D3D12\SwapChain.h" />
+    <ClInclude Include="Source\Rendering\CommandContext.h" />
+    <ClInclude Include="Source\Rendering\FrameContext.h" />
     <ClInclude Include="Source\Rendering\RenderContext.h" />
     <ClInclude Include="Source\Rendering\Vertex.h" />
-    <ClInclude Include="TrianglePass.h" />
+    <ClInclude Include="Source\Passes\TrianglePass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rdParty\imgui-docking\backends\imgui_impl_dx12.cpp">
@@ -80,7 +82,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Core/Globals.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Core/Globals.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="Source\D3D12\FrameSync.cpp" />
+    <ClCompile Include="Source\D3D12\CommandQueue.cpp" />
     <ClCompile Include="Source\Modules\ModuleRender.cpp" />
     <ClCompile Include="Source\Modules\ModuleD3D12.cpp" />
     <ClCompile Include="Source\Modules\ModuleInput.cpp" />
@@ -91,7 +93,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\D3D12\SwapChain.cpp" />
-    <ClCompile Include="TrianglePass.cpp" />
+    <ClCompile Include="Source\Passes\TrianglePass.cpp" />
+    <ClCompile Include="Source\Rendering\CommandContext.cpp" />
     <ClInclude Include="Source\Core\Targetver.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -102,6 +105,20 @@
   <ItemGroup>
     <Image Include="Resources\icon1.ico" />
     <Image Include="Resources\icon2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Source\Shaders\TrianglePS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Shaders\TriangleVS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

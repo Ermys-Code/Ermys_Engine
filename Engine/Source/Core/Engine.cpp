@@ -5,6 +5,7 @@
 
 #include "Core/Application.h"
 #include "Modules/ModuleD3D12.h"
+#include "D3D12/SwapChain.h"
 
 #include <shellapi.h>
 
@@ -41,13 +42,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	LoadStringW(hInstance, IDC_ERMYSENGINE, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
 
-	if (CoInitialize(nullptr) != S_OK)
+    HRESULT hr = CoInitialize(nullptr);
+	if (FAILED(hr))
 	{
 		return FALSE;
 	}
 
 	if (!InitInstance(hInstance, nCmdShow))
 	{
+        CoUninitialize();
 		return FALSE;
 	}
 
@@ -65,12 +68,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	}
 
 	delete app;
+    app = nullptr;
 
     ComPtr<IDXGIDebug> dxgiControler;
     if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiControler))))
     {
         dxgiControler->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
     }
+
+    CoUninitialize();
 
 	return (int)msg.wParam;
 }
@@ -131,6 +137,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	if (!app->init())
 	{
 		delete app;
+        app = nullptr;
 
 		return FALSE;
 	}
@@ -192,18 +199,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
     case WM_PAINT:
     {
-        app->update();
+        if (app != nullptr)
+        {
+            app->update();
+        }
     }
     break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
     case WM_SIZE:
-        if (wParam == SIZE_MINIMIZED) {
-            app->setPaused(true);
-        }
-        else {
-            app->setPaused(false);
+        if (app != nullptr)
+        {
+            if (wParam == SIZE_MINIMIZED) {
+                app->setPaused(true);
+            }
+            else {
+                app->setPaused(false);
+                app->GetModuleD3D12()->GetSwapChain()->Resize();
+            }
         }
         break;
     case WM_SYSKEYDOWN:

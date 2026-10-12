@@ -3,8 +3,8 @@
 
 #include "Core/Application.h"
 #include "Modules/ModuleD3D12.h"
-#include "D3D12/FrameSync.h"
 #include "Rendering/FrameContext.h"
+#include "Rendering/RenderContext.h"
 
 SwapChain::SwapChain(HWND hWnd, ID3D12Device4* device, ID3D12CommandQueue* commandQueue, IDXGIFactory6* factory)
 {
@@ -51,6 +51,8 @@ SwapChain::SwapChain(HWND hWnd, ID3D12Device4* device, ID3D12CommandQueue* comma
 
 		rtvHandle.ptr += rtvDescriptorSize;
 	}
+	
+	m_renderContext = RenderContext{};
 }
 
 SwapChain::~SwapChain()
@@ -65,46 +67,28 @@ void SwapChain::CleanUp()
 {
 }
 
-FrameContext SwapChain::GetFrameContext()
+uint64_t SwapChain::GetCurrentFrameIndex()
 {
 	m_currentFrameIndex = m_swapChain->GetCurrentBackBufferIndex();
-
-	RECT rect = {};
-	GetClientRect(m_hWnd, &rect);
-	unsigned width = unsigned(rect.right - rect.left);
-	unsigned height = unsigned(rect.bottom - rect.top);
-
-	FrameContext frameContext     = {};
-	frameContext.backBuffer		  = m_renderTargets[m_currentFrameIndex].Get();
-	frameContext.rtvCpuHandle     = GetRtvCpuHandle(m_currentFrameIndex);
-	frameContext.width			  = width;
-	frameContext.height			  = height;
-	frameContext.frameIndex       = m_currentFrameIndex;
-	frameContext.commandAllocator = app->GetModuleD3D12()->GetCommandAllocator(m_currentFrameIndex);
-
-	return frameContext;
+	return m_currentFrameIndex;
 }
 
-FrameContext SwapChain::StartNewFrame()
+RenderContext* SwapChain::GetCurrentRenderContext()
 {
-	if (m_frameNumber != 0)
-	{
-		app->GetModuleD3D12()->GetFrameSync()->WaitForFence(m_currentFrameIndex);
-	}
+	m_renderContext.frameIndex   = GetCurrentFrameIndex();
+	m_renderContext.backBuffer   = m_renderTargets[m_currentFrameIndex].Get();
+	m_renderContext.rtvCpuHandle = GetRtvCpuHandle(m_currentFrameIndex);
+	m_renderContext.scissorRect  = m_scissorRect;
+	m_renderContext.viewport	  = m_viewport;
 
-	return GetFrameContext();
+	return &m_renderContext;
 }
+
+
 
 void SwapChain::PresentCurrentFrame()
 {
 	m_swapChain->Present(0, 0);
-}
-
-void SwapChain::FinishCurrentFrame(ComPtr<ID3D12CommandQueue> commandQueue)
-{
-	app->GetModuleD3D12()->GetFrameSync()->SignalFence(m_currentFrameIndex, commandQueue);
-
-	m_frameNumber++;
 }
 
 void SwapChain::CreateBarrierForCurrentFrame(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES		after)
@@ -117,6 +101,55 @@ void SwapChain::CreateBarrierForCurrentFrame(ComPtr<ID3D12GraphicsCommandList> c
 	barrierToRenderTarget.Transition.StateAfter = after;
 	barrierToRenderTarget.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	commandList->ResourceBarrier(1, &barrierToRenderTarget);
+}
+
+void SwapChain::GetWindowSize(unsigned& width, unsigned& height)
+{
+	RECT rect = {};
+	GetClientRect(m_hWnd, &rect);
+
+	width = unsigned(rect.right - rect.left);
+	height = unsigned(rect.bottom - rect.top);
+}
+
+void SwapChain::Resize()
+{
+	unsigned width, height;
+	GetWindowSize(width, height);
+
+	if (width != m_windowWidth || height != m_windowHeight) {
+
+		m_windowWidth = width;
+		m_windowHeight = height;
+
+		m_viewport = D3D12_VIEWPORT{ 0.0, 0.0, float(m_windowWidth), float(m_windowHeight) , 0.0, 1.0 };
+		m_scissorRect = D3D12_RECT{ 0, 0, long(m_windowWidth), long(m_windowHeight) };
+
+		app->GetModuleD3D12()->GetCommandQueue()->Flush();
+
+		for (UINT n = 0; n < FRAMES_IN_FLIGHT; n++)
+		{
+			m_renderTargets[n].Reset();
+		}
+
+		// Resize the swap chain
+		DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+
+		m_swapChain->GetDesc(&swapChainDesc);
+
+		m_swapChain->ResizeBuffers(FRAMES_IN_FLIGHT, width, height, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags);
+
+		//Create Render Target Views
+		UINT rtvDescriptorSize = app->GetModuleD3D12()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		for (size_t i = 0; i < FRAMES_IN_FLIGHT; i++)
+		{
+			m_swapChain->GetBuffer(i, IID_PPV_ARGS(m_renderTargets[i].ReleaseAndGetAddressOf()));
+			app->GetModuleD3D12()->GetDevice()->CreateRenderTargetView(m_renderTargets[i].Get(), nullptr, rtvHandle);
+
+			rtvHandle.ptr += rtvDescriptorSize;
+		}
+	}
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE SwapChain::GetRtvCpuHandle(UINT frameIndex)
