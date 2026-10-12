@@ -5,7 +5,7 @@
 class CommandQueue
 {
 public:
-	CommandQueue(ComPtr<ID3D12Device4> device);
+	CommandQueue(ID3D12Device4* device);
 	virtual ~CommandQueue();
 	void CleanUp();
 

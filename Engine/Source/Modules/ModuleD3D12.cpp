@@ -17,7 +17,7 @@ bool ModuleD3D12::init()
 	if (!InitDX()) return false;
 	if (!m_device || !m_factory || !m_adapter) return false;
 
-	m_commandQueue = std::make_unique<CommandQueue>();
+	m_commandQueue = std::make_unique<CommandQueue>(m_device.Get());
 	if (!m_commandQueue) return false;
 
 	m_swapChain = std::make_unique<SwapChain>(m_hWnd, m_device.Get(), m_commandQueue->GetCommandQueue(), m_factory.Get());

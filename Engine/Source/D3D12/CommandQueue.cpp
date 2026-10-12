@@ -1,7 +1,7 @@
 #include "Core/Globals.h"
 #include "CommandQueue.h"
 
-CommandQueue::CommandQueue(ComPtr<ID3D12Device4> device)
+CommandQueue::CommandQueue(ID3D12Device4* device)
 {
 	//Create Command Queue
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
