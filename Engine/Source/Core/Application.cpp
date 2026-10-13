@@ -3,6 +3,7 @@
 
 #include "Modules/ModuleInput.h"
 #include "Modules/ModuleD3D12.h"
+#include "Modules/ModuleResources.h"
 #include "Modules/ModuleRender.h"
 
 Application::Application(int argc, wchar_t** argv, void* hWnd)
@@ -12,6 +13,10 @@ Application::Application(int argc, wchar_t** argv, void* hWnd)
     auto moduleD3D12 = std::make_unique<ModuleD3D12>((HWND)hWnd);
     m_moduleD3D12 = moduleD3D12.get();
     m_modules.push_back(std::move(moduleD3D12));
+
+    auto moduleResources = std::make_unique<ModuleResources>();
+    m_moduleResources = moduleResources.get();
+    m_modules.push_back(std::move(moduleResources));
 
     m_modules.push_back(std::make_unique<ModuleRender>());
 }

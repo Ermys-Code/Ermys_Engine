@@ -3,6 +3,7 @@
 
 #include "Core/Application.h"
 #include "Modules/ModuleD3D12.h"
+#include "Modules/ModuleResources.h"
 
 #include "Rendering/FrameContext.h"
 #include "Rendering/RenderContext.h"
@@ -91,25 +92,11 @@ void TrianglePass::createVertexBuffer(ID3D12Device4* device)
         { Vector3(1.0f, -1.0f, 0.0f) }
     };
 
-    const UINT bufferSize = sizeof(vertices);
+    m_vertexBuffer = app->GetModuleResources()->CreateIndividualDefaultBuffer(vertices, sizeof(vertices), "Triangle Vertex Buffer");
 
-    CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
-
-    CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
-
-    ThrowIfFailed(device->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE, &bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&m_vertexBuffer)));
-
-    void* mappedData = nullptr;
-    const D3D12_RANGE readRange{ 0, 0 };
-
-    ThrowIfFailed(m_vertexBuffer->Map(0, &readRange, &mappedData));
-
-    memcpy(mappedData, vertices, bufferSize);
-
-    m_vertexBuffer->Unmap(0, nullptr);
 
     m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
 
-    m_vertexBufferView.SizeInBytes = bufferSize;
+    m_vertexBufferView.SizeInBytes = sizeof(vertices);
     m_vertexBufferView.StrideInBytes = sizeof(Vertex);
 }

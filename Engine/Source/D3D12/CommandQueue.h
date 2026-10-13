@@ -17,6 +17,8 @@ public:
 	void     WaitForFenceValue(uint64_t fenceValue);
 	void     Flush();
 
+	uint64_t ExecuteCommandListAndSignal(ID3D12CommandList* commandList);
+
 	uint64_t GetCompletedFenceValue();
 
 

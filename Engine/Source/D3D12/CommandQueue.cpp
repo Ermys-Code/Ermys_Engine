@@ -50,6 +50,8 @@ uint64_t CommandQueue::Signal()
 
 void CommandQueue::WaitForFenceValue(uint64_t fenceValue)
 {
+	if (m_fence->GetCompletedValue() >= fenceValue) return;
+
 	m_fence->SetEventOnCompletion(fenceValue, m_fenceEvent);
 	WaitForSingleObject(m_fenceEvent, INFINITE);
 }
@@ -59,7 +61,13 @@ void CommandQueue::Flush()
 	WaitForFenceValue(Signal());
 }
 
+uint64_t CommandQueue::ExecuteCommandListAndSignal(ID3D12CommandList* commandList)
+{
+	ExecuteCommandList(commandList);
+	return Signal();
+}
+
 uint64_t CommandQueue::GetCompletedFenceValue()
 {
-	return 0;
+	return m_fence->GetCompletedValue();
 }

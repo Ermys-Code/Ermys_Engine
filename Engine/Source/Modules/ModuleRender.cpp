@@ -68,11 +68,10 @@ void ModuleRender::postRender()
 {
 	m_currentFrameContext->commandContext->Close();
 
-	m_commandQueue->ExecuteCommandList(m_currentFrameContext->commandContext->GetCommandList());
+	m_currentFrameContext->fenceValue = m_commandQueue->ExecuteCommandListAndSignal(m_currentFrameContext->commandContext->GetCommandList());
 
 	m_swapChain->PresentCurrentFrame();
 
-	m_currentFrameContext->fenceValue = m_commandQueue->Signal();
 }
 
 bool ModuleRender::cleanUp()

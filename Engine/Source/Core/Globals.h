@@ -29,12 +29,17 @@ using namespace DirectX;
 using namespace DirectX::SimpleMath;
 using Microsoft::WRL::ComPtr;
 
-#define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
-void log(const char file[], int line, const char* format, ...);
+#define DEBUG_LOG(format, ...)  debug_log(__FILE__, __LINE__, format, ##__VA_ARGS__)
+#define DEBUG_WARN(format, ...) debug_warn(__FILE__, __LINE__, format, ##__VA_ARGS__)
+#define DEBUG_ERROR(format, ...) debug_error(__FILE__, __LINE__, format, ##__VA_ARGS__)
+void debug_log(const char file[], int line, const char* format, ...);
+void debug_warn(const char file[], int line, const char* format, ...);
+void debug_error(const char file[], int line, const char* format, ...);
 
-#define FRAMES_IN_FLIGHT 3
+#define FRAMES_IN_FLIGHT 2
 
 #include "debug_draw.hpp"
+
 inline const ddVec3& ddConvert(const Vector3& v) { return reinterpret_cast<const ddVec3&>(v); }
 inline const ddMat4x4& ddConvert(const Matrix& m) { return reinterpret_cast<const ddMat4x4&>(m); }
 
