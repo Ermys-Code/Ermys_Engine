@@ -28,10 +28,13 @@ public:
 
 private:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRtvCpuHandle(UINT frameIndex);
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDsvCpuHandle(UINT frameIndex);
 
 	ComPtr<IDXGISwapChain3>	           m_swapChain;
 	ComPtr<ID3D12DescriptorHeap>	   m_rtvDescriptorHeap;
+	ComPtr<ID3D12DescriptorHeap>	   m_dsvDescriptorHeap;
 	ComPtr<ID3D12Resource>	           m_renderTargets[FRAMES_IN_FLIGHT];
+	ComPtr<ID3D12Resource>	           m_depthStencils[FRAMES_IN_FLIGHT];
 
 	HWND m_hWnd;
 
@@ -43,7 +46,7 @@ private:
 
 	RenderContext m_renderContext;
 
-	unsigned int m_windowWidth{ 0 };
-	unsigned int m_windowHeight{ 0 };
+	unsigned int m_windowWidth{ 1 };
+	unsigned int m_windowHeight{ 1 };
 };
 

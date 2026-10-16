@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="3rdParty\DebugDraw\DebugDrawPass.h" />
+    <ClInclude Include="3rdParty\DebugDraw\debug_draw.hpp" />
     <ClInclude Include="3rdParty\imgui-docking\backends\imgui_impl_dx12.h" />
     <ClInclude Include="3rdParty\imgui-docking\backends\imgui_impl_win32.h" />
     <ClInclude Include="3rdParty\imgui-docking\imgui.h" />
@@ -19,6 +21,9 @@
     <ClInclude Include="3rdParty\Input\Keyboard.h" />
     <ClInclude Include="3rdParty\Input\Mouse.h" />
     <ClInclude Include="3rdParty\Input\PlatformHelpers.h" />
+    <ClInclude Include="3rdParty\SimpleMath\SimpleMath.h" />
+    <ClInclude Include="Source\Passes\CameraTrianglePass.h" />
+    <ClInclude Include="Source\Modules\ModuleCamera.h" />
     <ClInclude Include="Source\Modules\ModuleResources.h" />
     <ClInclude Include="Source\D3D12\CommandQueue.h" />
     <ClInclude Include="Source\Passes\IRenderPass.h" />
@@ -37,8 +42,13 @@
     <ClInclude Include="Source\Rendering\RenderContext.h" />
     <ClInclude Include="Source\Rendering\Vertex.h" />
     <ClInclude Include="Source\Passes\TrianglePass.h" />
+    <ClInclude Include="Source\Settings\CameraSettings.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3rdParty\DebugDraw\DebugDrawPass.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="3rdParty\imgui-docking\backends\imgui_impl_dx12.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -83,6 +93,12 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Core/Globals.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Core/Globals.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="3rdParty\SimpleMath\SimpleMath.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Passes\CameraTrianglePass.cpp" />
+    <ClCompile Include="Source\Modules\ModuleCamera.cpp" />
     <ClCompile Include="Source\Modules\ModuleResources.cpp" />
     <ClCompile Include="Source\D3D12\CommandQueue.cpp" />
     <ClCompile Include="Source\Modules\ModuleRender.cpp" />
@@ -109,6 +125,18 @@
     <Image Include="Resources\icon2.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Source\Shaders\CameraTrianglePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Source\Shaders\CameraTriangleVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Source\Shaders\TrianglePS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
@@ -121,6 +149,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="3rdParty\SimpleMath\SimpleMath.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

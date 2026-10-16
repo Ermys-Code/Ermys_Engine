@@ -19,14 +19,17 @@ public:
 	void render()	  override;
 	void postRender() override;
 	bool cleanUp()	  override;
+	
+	CommandQueue* GetCommandQueue() { return m_commandQueue; }
 
 private:
 	std::unique_ptr<FrameContext> m_frameContexts[FRAMES_IN_FLIGHT];
-	FrameContext*				  m_currentFrameContext = nullptr;
-	RenderContext*				  m_currentRenderContext = nullptr;
+	
+	FrameContext* m_currentFrameContext   = nullptr;
+	RenderContext* m_currentRenderContext = nullptr;
 
-	CommandQueue* m_commandQueue;
-	SwapChain*	  m_swapChain;
+	CommandQueue* m_commandQueue = nullptr;
+	SwapChain* m_swapChain       = nullptr;
 
 
 	std::vector<std::unique_ptr<IRenderPass>> m_renderPasses;

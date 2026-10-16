@@ -18,7 +18,9 @@ Application::Application(int argc, wchar_t** argv, void* hWnd)
     m_moduleResources = moduleResources.get();
     m_modules.push_back(std::move(moduleResources));
 
-    m_modules.push_back(std::make_unique<ModuleRender>());
+    auto moduleRender = std::make_unique<ModuleRender>();
+    m_moduleRender = moduleRender.get();
+    m_modules.push_back(std::move(moduleRender));
 }
 
 Application::~Application()

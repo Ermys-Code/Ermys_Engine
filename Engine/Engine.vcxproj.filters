@@ -96,6 +96,24 @@
     <ClInclude Include="Source\Modules\ModuleResources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Settings\CameraSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Modules\ModuleCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Passes\CameraTrianglePass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdParty\DebugDraw\DebugDrawPass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdParty\DebugDraw\debug_draw.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdParty\SimpleMath\SimpleMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Engine.cpp">
@@ -161,6 +179,18 @@
     <ClCompile Include="Source\Modules\ModuleResources.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Modules\ModuleCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Passes\CameraTrianglePass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdParty\DebugDraw\DebugDrawPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdParty\SimpleMath\SimpleMath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Engine.rc">
@@ -178,5 +208,12 @@
   <ItemGroup>
     <FxCompile Include="Source\Shaders\TriangleVS.hlsl" />
     <FxCompile Include="Source\Shaders\TrianglePS.hlsl" />
+    <FxCompile Include="Source\Shaders\CameraTriangleVS.hlsl" />
+    <FxCompile Include="Source\Shaders\CameraTrianglePS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="3rdParty\SimpleMath\SimpleMath.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

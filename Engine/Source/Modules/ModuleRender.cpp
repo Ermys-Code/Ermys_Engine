@@ -10,6 +10,7 @@
 
 #include "Passes/IRenderPass.h"
 #include "Passes/TrianglePass.h"
+#include "Passes/CameraTrianglePass.h"
 
 ModuleRender::ModuleRender()
 {
@@ -29,7 +30,8 @@ bool ModuleRender::init()
 	m_swapChain    = app->GetModuleD3D12()->GetSwapChain();
 	m_commandQueue = app->GetModuleD3D12()->GetCommandQueue();
 
-	m_renderPasses.push_back(std::make_unique<TrianglePass>());
+	//m_renderPasses.push_back(std::make_unique<TrianglePass>());
+	m_renderPasses.push_back(std::make_unique<CameraTrianglePass>());
 	
 	return true;
 }

@@ -17,7 +17,7 @@
 #include <d3d12.h>
 #include "d3dx12.h"
 
-#include "SimpleMath.h"
+#include "3rdParty/SimpleMath/SimpleMath.h"
 
 #if USE_PIX
 #include "WinPixEventRuntime/pix3.h"

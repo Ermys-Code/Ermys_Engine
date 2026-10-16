@@ -1,9 +1,9 @@
 #define DEBUG_DRAW_IMPLEMENTATION
 
-#include "Globals.h"
-#include "DebugDrawPass.h"
+#include "Core/Globals.h"
+#include "3rdParty/DebugDraw/DebugDrawPass.h"
 
-#include "SimpleMath.h"
+#include "SimpleMath/SimpleMath.h"
 
 #include <d3dcompiler.h>
 #include "d3dx12.h"
