@@ -55,6 +55,7 @@ void ModuleRender::render()
 
 	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	commandList->ClearRenderTargetView(m_currentRenderContext->rtvCpuHandle, clearColor, 0, nullptr);
+	commandList->ClearDepthStencilView(m_currentRenderContext->dsvCpuHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 	
 	for (auto& pass : m_renderPasses)
 	{

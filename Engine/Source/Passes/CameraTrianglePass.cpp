@@ -42,7 +42,7 @@ void CameraTrianglePass::render(ID3D12GraphicsCommandList4* commandList)
     Matrix proj  = Matrix::CreatePerspectiveFieldOfView(XM_PIDIV4, float(m_renderContext->width) / float(m_renderContext->height), 0.1f, 1000.0f);
 
     m_mvpMatrix = (model * view * proj).Transpose();
-    commandList->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / sizeof(UINT32), &m_mvpMatrix, 0);
+    commandList->SetGraphicsRoot32BitConstants(0, sizeof(Matrix) / sizeof(UINT32), &m_mvpMatrix, 0);
 
     commandList->RSSetViewports(1, &m_renderContext->viewport);
     commandList->RSSetScissorRects(1, &m_renderContext->scissorRect);
@@ -101,6 +101,7 @@ void CameraTrianglePass::createPipelineState(ID3D12Device4* device)
     desc.SampleDesc = { 1, 0 };
     desc.SampleMask = UINT_MAX;
     desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    desc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
     desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
     device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&m_pipelineState));
@@ -110,9 +111,9 @@ void CameraTrianglePass::createVertexBuffer(ID3D12Device4* device)
 {
     Vertex vertices[3] =
     {
-        { Vector3(-1.0f, -1.0f, 0.0f) },
-        { Vector3(0.0f,  1.0f, 0.0f) },
-        { Vector3(1.0f, -1.0f, 0.0f) }
+        Vector3(-1.0f, -1.0f, 0.0f),  // 0
+        Vector3(0.0f, 1.0f, 0.0f),    // 1
+        Vector3(1.0f, -1.0f, 0.0f)    // 2
     };
 
     m_vertexBuffer = app->GetModuleResources()->CreateIndividualDefaultBuffer(vertices, sizeof(vertices), "Triangle Vertex Buffer");
