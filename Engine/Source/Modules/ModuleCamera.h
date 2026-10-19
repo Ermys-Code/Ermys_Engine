@@ -8,27 +8,29 @@
 class ModuleCamera : public IModule
 {
 public:
+	ModuleCamera();
+	~ModuleCamera();
+
 	bool init()    override;
 	void update()  override;
 	bool cleanUp() override;
 
 	void SetCameraSettings(CameraSettings& settings);
-	void SetViewportSize(float width, float height);
-
-	const Matrix& GetViewMatrix() const;
-	const Matrix& GetProjectionMatrix() const;
-	const Matrix& GetViewProjectionMatrix() const;
-
 	const CameraSettings& GetCameraSettings() const { return m_cameraSettings; }
+	
+	const Matrix& GetViewMatrix() const			  { return m_viewMatrix; }
+	const Matrix& GetProjectionMatrix() const     { return m_projectionMatrix; }
+	const Matrix& GetViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
-	const BoundingFrustum& GetWorldFrustum() const;
+	void SetDirty() { m_isDirty = true; }
 
 private:
+	void Resize();
 	void UpdateViewMatrix();
 	void UpdateProjectionMatrix();
 	void UpdateViewProjectionMatrix();
 
-	CameraSettings m_cameraSettings;
+	CameraSettings m_cameraSettings{};
 
 	float m_viewportWidth = 1280.0f;
 	float m_viewportHeight = 720.0f;
@@ -37,7 +39,6 @@ private:
 	Matrix m_projectionMatrix{};
 	Matrix m_viewProjectionMatrix{};
 
-	BoundingFrustum m_viewFrustum{};
-	BoundingFrustum m_worldFrustum{};
+	bool m_isDirty = false;
 };
 

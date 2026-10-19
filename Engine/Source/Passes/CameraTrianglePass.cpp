@@ -4,6 +4,7 @@
 #include "Core/Application.h"
 #include "Modules/ModuleD3D12.h"
 #include "Modules/ModuleResources.h"
+#include "Modules/ModuleCamera.h"
 #include "Modules/ModuleRender.h"
 
 #include "Rendering/FrameContext.h"
@@ -34,14 +35,17 @@ void CameraTrianglePass::prepare(RenderContext* renderContext, FrameContext* fra
 
 void CameraTrianglePass::render(ID3D12GraphicsCommandList4* commandList)
 {
+    ModuleCamera* moduleCamera = app->GetModuleCamera();
+
     commandList->SetPipelineState(m_pipelineState.Get());
     commandList->SetGraphicsRootSignature(m_rootSignature.Get());
     
-    Matrix model = Matrix::Identity;
-    Matrix view  = Matrix::CreateLookAt(Vector3(0.0f, 10.0f, 10.0f), Vector3::Zero, Vector3::Up);
-    Matrix proj  = Matrix::CreatePerspectiveFieldOfView(XM_PIDIV4, float(m_renderContext->width) / float(m_renderContext->height), 0.1f, 1000.0f);
+    Matrix model     = Matrix::Identity;
+    Matrix viewProj = moduleCamera->GetViewProjectionMatrix();
 
-    m_mvpMatrix = (model * view * proj).Transpose();
+    Matrix proj = Matrix::CreatePerspectiveFieldOfView(XM_PIDIV4, float(m_renderContext->width) / float(m_renderContext->height), 0.1f, 1000.0f);
+
+    m_mvpMatrix = (model * viewProj).Transpose();
     commandList->SetGraphicsRoot32BitConstants(0, sizeof(Matrix) / sizeof(UINT32), &m_mvpMatrix, 0);
 
     commandList->RSSetViewports(1, &m_renderContext->viewport);
@@ -58,7 +62,7 @@ void CameraTrianglePass::render(ID3D12GraphicsCommandList4* commandList)
     dd::xzSquareGrid(-10.0f, 10.0f, 0.0f, 1.0f, dd::colors::LightGray);
     dd::axisTriad(ddConvert(Matrix::Identity), 0.1f, 1.0f);
 
-    m_debugDrawPass->record(commandList, m_renderContext->width, m_renderContext->height, view, proj);
+    m_debugDrawPass->record(commandList, m_renderContext->width, m_renderContext->height, moduleCamera->GetViewMatrix(), moduleCamera->GetProjectionMatrix());
 }
 
 void CameraTrianglePass::createRootSignature(ID3D12Device4* device)
@@ -101,7 +105,6 @@ void CameraTrianglePass::createPipelineState(ID3D12Device4* device)
     desc.SampleDesc = { 1, 0 };
     desc.SampleMask = UINT_MAX;
     desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    desc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
     desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
     device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&m_pipelineState));

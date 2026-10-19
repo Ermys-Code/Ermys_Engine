@@ -5,6 +5,7 @@
 
 #include "Core/Application.h"
 #include "Modules/ModuleD3D12.h"
+#include "Modules/ModuleCamera.h"
 #include "D3D12/SwapChain.h"
 
 #include <shellapi.h>
@@ -217,6 +218,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             else {
                 app->setPaused(false);
                 app->GetModuleD3D12()->GetSwapChain()->Resize();
+                app->GetModuleCamera()->SetDirty();
             }
         }
         break;

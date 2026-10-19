@@ -4,6 +4,7 @@
 #include "Modules/ModuleInput.h"
 #include "Modules/ModuleD3D12.h"
 #include "Modules/ModuleResources.h"
+#include "Modules/ModuleCamera.h"
 #include "Modules/ModuleRender.h"
 
 Application::Application(int argc, wchar_t** argv, void* hWnd)
@@ -17,6 +18,10 @@ Application::Application(int argc, wchar_t** argv, void* hWnd)
     auto moduleResources = std::make_unique<ModuleResources>();
     m_moduleResources = moduleResources.get();
     m_modules.push_back(std::move(moduleResources));
+
+    auto moduleCamera = std::make_unique<ModuleCamera>();
+    m_moduleCamera = moduleCamera.get();
+    m_modules.push_back(std::move(moduleCamera));
 
     auto moduleRender = std::make_unique<ModuleRender>();
     m_moduleRender = moduleRender.get();

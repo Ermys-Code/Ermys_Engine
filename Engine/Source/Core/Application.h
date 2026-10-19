@@ -9,6 +9,7 @@
 class IModule;
 class ModuleD3D12;
 class ModuleResources;
+class ModuleCamera;
 class ModuleRender;
 
 class Application
@@ -30,6 +31,7 @@ public:
 
 	ModuleD3D12* GetModuleD3D12()         { return m_moduleD3D12; }
 	ModuleResources* GetModuleResources() { return m_moduleResources; }
+	ModuleCamera* GetModuleCamera()		  { return m_moduleCamera;}
 	ModuleRender* GetModuleRender()		  { return m_moduleRender; }
 
 private:
@@ -47,6 +49,7 @@ private:
 
 	ModuleD3D12*     m_moduleD3D12 = nullptr;
 	ModuleResources* m_moduleResources = nullptr;
+	ModuleCamera*    m_moduleCamera = nullptr;
 	ModuleRender*    m_moduleRender = nullptr;
 };
 
