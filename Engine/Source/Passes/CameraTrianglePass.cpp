@@ -43,8 +43,6 @@ void CameraTrianglePass::render(ID3D12GraphicsCommandList4* commandList)
     Matrix model     = Matrix::Identity;
     Matrix viewProj = moduleCamera->GetViewProjectionMatrix();
 
-    Matrix proj = Matrix::CreatePerspectiveFieldOfView(XM_PIDIV4, float(m_renderContext->width) / float(m_renderContext->height), 0.1f, 1000.0f);
-
     m_mvpMatrix = (model * viewProj).Transpose();
     commandList->SetGraphicsRoot32BitConstants(0, sizeof(Matrix) / sizeof(UINT32), &m_mvpMatrix, 0);
 

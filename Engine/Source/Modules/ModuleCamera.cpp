@@ -26,7 +26,6 @@ void ModuleCamera::update()
 {
     if (m_isDirty)
     {
-        Resize();
         UpdateViewMatrix();
         UpdateProjectionMatrix();
         UpdateViewProjectionMatrix();
@@ -57,9 +56,57 @@ void ModuleCamera::Resize()
     m_cameraSettings.aspectRatio = float(width) / float(height);
 }
 
+void ModuleCamera::Up()
+{
+    float height = m_position.y;
+    height += 1;
+    m_position = Vector3(m_position.x, height, m_position.z);
+    m_isDirty = true;
+}
+
+void ModuleCamera::Down()
+{
+    float height = m_position.y;
+    height -= 1;
+    m_position = Vector3(m_position.x, height, m_position.z);
+    m_isDirty = true;
+}
+
+void ModuleCamera::Forward()
+{
+    float posZ = m_position.z;
+    posZ += 1;
+    m_position = Vector3(m_position.x, m_position.y, posZ);
+    m_isDirty = true;
+}
+
+void ModuleCamera::Backward()
+{
+    float posZ = m_position.z;
+    posZ -= 1;
+    m_position = Vector3(m_position.x, m_position.y, posZ);
+    m_isDirty = true;
+}
+
+void ModuleCamera::Left()
+{
+    float posX = m_position.x;
+    posX -= 1;
+    m_position = Vector3(posX, m_position.y, m_position.z);
+    m_isDirty = true;
+}
+
+void ModuleCamera::Right()
+{
+    float posX = m_position.x;
+    posX += 1;
+    m_position = Vector3(posX, m_position.y, m_position.z);
+    m_isDirty = true;
+}
+
 void ModuleCamera::UpdateViewMatrix()
 {
-    m_viewMatrix = Matrix::CreateLookAt(Vector3(0.0f, 5.0f, 10.0f), Vector3::Zero, Vector3::Up);
+    m_viewMatrix = Matrix::CreateLookAt(m_position, Vector3(m_position.x, m_position.y, m_position.z - 1), Vector3::Up);
 }
 
 void ModuleCamera::UpdateProjectionMatrix()

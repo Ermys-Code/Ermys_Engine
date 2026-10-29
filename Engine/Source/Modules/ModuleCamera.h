@@ -23,9 +23,16 @@ public:
 	const Matrix& GetViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
 	void SetDirty() { m_isDirty = true; }
+	void Resize();
+
+	void Up();
+	void Down();
+	void Forward();
+	void Backward();
+	void Left();
+	void Right();
 
 private:
-	void Resize();
 	void UpdateViewMatrix();
 	void UpdateProjectionMatrix();
 	void UpdateViewProjectionMatrix();
@@ -40,5 +47,8 @@ private:
 	Matrix m_viewProjectionMatrix{};
 
 	bool m_isDirty = false;
+
+	Vector3 m_position = Vector3(0.0f, 5.0f, 10.0f);
+
 };
 

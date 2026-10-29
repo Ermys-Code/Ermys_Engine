@@ -218,7 +218,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             else {
                 app->setPaused(false);
                 app->GetModuleD3D12()->GetSwapChain()->Resize();
-                app->GetModuleCamera()->SetDirty();
+                app->GetModuleCamera()->Resize();
             }
         }
         break;
@@ -230,6 +230,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         Keyboard::ProcessMessage(message, wParam, lParam);
         break;
     case WM_KEYDOWN:
+        if (wParam == VK_SPACE)
+        {
+            app->GetModuleCamera()->Up();
+        }
+        if (wParam == VK_CONTROL)
+        {
+            app->GetModuleCamera()->Down();
+        }
         Keyboard::ProcessMessage(message, wParam, lParam);
         break;
     case WM_KEYUP:
